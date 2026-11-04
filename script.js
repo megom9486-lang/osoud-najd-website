@@ -1,151 +1,39 @@
-(() => {
-  'use strict';
-  const root = document.documentElement;
-  const langButton = document.getElementById('langButton');
-  const menuButton = document.getElementById('menuButton');
-  const mobileNav = document.getElementById('mobileNav');
-  const elements = Array.from(document.querySelectorAll('[data-i18n]'));
-  const ar = {};
-  elements.forEach(el => { ar[el.dataset.i18n] = el.innerHTML; });
-  let language = 'ar';
-  const en = {
-    skip:'Skip to content',location:'Riyadh, Saudi Arabia',since:'Executing with confidence since 2022',brandName:'OSOUD NAJD',brandSub:'GENERAL CONTRACTING',
-    navHome:'Home',navAbout:'About',navServices:'Expertise',navProjects:'Projects',navContact:'Contact',navCta:'Discuss a Project',
-    heroEyebrow:'OSOUD NAJD GENERAL CONTRACTING | RIYADH',heroLine1:'Building trust.',heroLine2:'Leaving a legacy.',
-    heroLead:'From concrete and steel structures to fit-out, roadworks and landscaping, we turn project requirements into dependable execution.',
-    seeProjects:'Explore Our Projects',connectNow:'Talk to Our Team',heroFoot:'Original photographs from our project experience',
-    badgePrimary:'Experience in every detail',badgeSecondary:'RIYADH · SAUDI ARABIA',scrollLabel:'Discover the company ↓',
-    capabilityLabel:'ON THE GROUND',capabilityIntro:'We know that a strong project begins with the details you do not see.',stat1:'Established',stat2:'Execution disciplines',stat3:'Riyadh-based',
-    aboutEyebrow:'01 — ABOUT US',aboutTitle1:'Experience on site.',aboutTitle2:'Trust built through results.',aboutLead:'Founded in Riyadh in 2022, Osoud Najd delivers construction and specialist work packages, with documented experience across Riyadh Metro, JAX and Diriyah projects.',
-    aboutBody:'We carry out concrete works, structural steel, interior fit-out, roads and site preparation for owners and main contractors. Attention to site coordination, execution detail and handover defines our approach.',
-    aboutCta:'Explore Our Capabilities',aboutDetail:'Professional execution starts with clear responsibility.',aboutQuote:'We treat every detail as part of the project’s overall success.',
-    servicesEyebrow:'02 — OUR CAPABILITIES',servicesTitle1:'Execution expertise.',servicesTitle2:'For every project.',servicesIntro:'Specialised services supporting construction projects from civil works through to fit-out and external areas.',
-    service1Title:'Concrete Works',service1Desc:'Concrete elements and construction work tailored to project specifications.',
-    service2Title:'Steel Structures',service2Desc:'Structural steelwork, installation and steel framing solutions.',
-    service3Title:'Interior Fit-Out',service3Desc:'Interior finishing, renovations and facility fit-out works.',
-    service4Title:'Roads & Site Preparation',service4Desc:'Roadworks, site preparation and outdoor hardscape construction.',
-    service5Title:'Landscaping',service5Desc:'Landscape execution, external pathways and site improvements.',
-    servicesFoot:'Precise execution. Active coordination. Clear direction.',servicesCta:'Discuss Your Project',
-    signature:'Quality is not the final step.<br><em>It guides every stage.</em>',
-    projectsEyebrow:'03 — SELECTED WORK',projectsTitle1:'Projects that speak',projectsTitle2:'for our experience.',projectsIntro:'A curated selection of Osoud Najd projects using original site photographs from the company records.',
-    filterAll:'All Projects',filterCivil:'Construction',filterInfra:'Roads & Sites',filterFitout:'Fit-Out',
-    metroCategory:'Concrete & Construction',metroTitle:'Riyadh Metro — Line 5',jaxroadsCategory:'Roads & Hardscape',jaxroadsTitle:'JAX — Roads & Hardscape',
-    jaxfitCategory:'Fit-Out & Finishing',jaxfitTitle:'JAX — Warehouse Fit-Out',diriyahCategory:'Landscaping & Outdoor Works',diriyahTitle:'Diriyah Biennale — Landscaping',
-    eventsCategory:'Event Preparation',eventsTitle:'HYA HUB — Event Preparation',steelCategory:'Steel Structures',steelTitle:'Selected Steelwork',
-    projectsNote:'Project images are from the Osoud Najd company portfolio. Some works were delivered as a subcontractor under main contractors. Confidential project images are not published here.',
-    processEyebrow:'04 — OUR APPROACH',processTitle1:'From planning',processTitle2:'to handover.',processLead:'We assess each scope, coordinate with project stakeholders and follow through to handover.',processCta:'Discuss Your Scope of Work',
-    step1Title:'Scope Assessment',step1Desc:'Understanding work packages, specifications and delivery priorities.',
-    step2Title:'Planning & Coordination',step2Desc:'Organizing resources, phases and on-site interfaces.',
-    step3Title:'Execution & Monitoring',step3Desc:'Monitoring activities with attention to quality and safety requirements.',
-    step4Title:'Inspection & Handover',step4Desc:'Reviewing deliverables and coordinating handover.',
-    contactEyebrow:'05 — WORK WITH US',contactTitle1:'Your next project.',contactTitle2:'A stronger partnership.',contactLead:'We welcome opportunities with developers, main contractors and project owners across construction, fit-out and infrastructure scopes.',
-    whatsappCta:'Message Us on WhatsApp',emailCta:'Send an Email',contactInfoTitle:'Contact Information',contactPhoneTitle:'PHONE',contactEmailTitle:'EMAIL',contactLocationTitle:'LOCATION',contactLocation:'Al Rimal, Riyadh, Saudi Arabia',mapCta:'Open Map',
-    footerLine:'Built on trust. Delivered with care.',footerRights:'All rights reserved',backTop:'Back to top ↑',modalSource:'Source: company project records',modalCta:'Discuss Similar Work ↗', stripTitle:'EXPERTISE',stripOne:'Construction',stripTwo:'Concrete',stripThree:'Fit-Out',stripFour:'Roads & Sites',stripFive:'Steel Structures',aboutCaption:'Roadworks & hardscape',statementKicker:'OUR EXECUTION PRINCIPLES'
-  };
-  const projects = {
-    metro: {
-      ar: {title:'مترو الرياض — المسار الخامس',category:'أعمال خرسانية وإنشائية',text:'تتضمن سابقة أعمال أسود نجد نطاق أعمال خرسانية وإنشائية بمحطات المسار الخامس لمترو الرياض، نُفذت ضمن أعمال مقاول رئيسي حسب سجل الشركة.'},
-      en: {title:'Riyadh Metro — Line 5',category:'Concrete and construction works',text:'The company’s project record lists concrete and construction works related to Riyadh Metro Line 5, delivered within a main contractor’s project scope.'}
-    },
-    jaxroads: {
-      ar: {title:'مشروعات JAX — الطرق والمسطحات الخارجية',category:'الطرق وتجهيز المواقع',text:'أعمال طرق وتهيئة مساحات ومسطحات خارجية ضمن مشروعات JAX، وفق الصور وسجل الأعمال الوارد في ملف الشركة.'},
-      en: {title:'JAX — Roads & Hardscape',category:'Roadworks and hardscape',text:'Roadworks and outdoor hardscape packages within the JAX development, shown in the submitted company portfolio.'}
-    },
-    jaxfit: {
-      ar: {title:'مشروعات JAX — التجهيز والتشطيبات',category:'تجهيز مواقع وتشطيبات',text:'أعمال تجهيز وتشطيبات ومساحات داخلية مرتبطة بمشروعات JAX، مع عرض لصور من التنفيذ الفعلي.'},
-      en: {title:'JAX — Warehouse Fit-Out',category:'Interior fit-out and finishing',text:'Interior preparation and finishing works within JAX project spaces, illustrated using photographs from the company records.'}
-    },
-    diriyah: {
-      ar: {title:'بينالي الدرعية — أعمال اللاندسكيب',category:'تنسيق المواقع الخارجية',text:'تنفيذ أعمال تنسيق مواقع ومسطحات خارجية ضمن نطاق أعمال بينالي الدرعية، من خلال مقاول رئيسي كما ورد في سجل المشروع.'},
-      en: {title:'Diriyah Biennale — Landscaping',category:'Landscaping and outdoor works',text:'Landscaping and external-site execution in the Diriyah Biennale project scope, delivered under a main contractor as recorded in the portfolio.'}
-    },
-    events: {
-      ar: {title:'HYA HUB — تجهيز الفعاليات',category:'أعمال التجهيز',text:'تنفيذ أعمال تجهيز ومساحات الفعاليات ضمن مشروع HYA HUB، من الصور الواردة في سابقة الأعمال.'},
-      en: {title:'HYA HUB — Event Preparation',category:'Event fit-out',text:'Event preparation and venue works documented in the HYA HUB project photographs from the company portfolio.'}
-    },
-    steel: {
-      ar: {title:'نماذج من أعمال الهياكل المعدنية',category:'هياكل فولاذية',text:'نماذج تصويرية لأعمال الهياكل الحديدية المدرجة ضمن ألبوم الشركة؛ لا تُنسب الصورة هنا إلى مشروع مسمى غير موثق.'},
-      en: {title:'Selected Steel Structure Works',category:'Structural steelwork',text:'Examples of steel structure works from the company’s photo album. These images are not attributed to a named project without clear documentation.'}
-    }
-  };
-  function changeLanguage(next) {
-    language = next;
-    root.lang = next;
-    root.dir = next === 'ar' ? 'rtl' : 'ltr';
-    elements.forEach(el => {
-      const key = el.dataset.i18n;
-      if (next === 'en' && Object.prototype.hasOwnProperty.call(en,key)) el.innerHTML = en[key];
-      else if (next === 'ar' && Object.prototype.hasOwnProperty.call(ar,key)) el.innerHTML = ar[key];
-    });
-    langButton.innerHTML = next === 'ar' ? 'EN <span aria-hidden="true">↗</span>' : 'العربية <span aria-hidden="true">↗</span>';
-    langButton.setAttribute('aria-label', next === 'ar' ? 'Switch to English' : 'العودة إلى العربية');
-    document.title = next === 'ar' ? 'أسود نجد للمقاولات العامة | Osoud Najd' : 'Osoud Najd General Contracting | Riyadh';
-    menuButton.setAttribute('aria-label', next === 'ar' ? 'فتح القائمة' : 'Open navigation');
-    if (modal.open) populateModal(modal.dataset.currentProject);
-  }
-  langButton.addEventListener('click', () => changeLanguage(language === 'ar' ? 'en' : 'ar'));
+(()=>{'use strict';
+const translations={
+  skip:'Skip to content',nav_home:'Home',nav_about:'About',nav_services:'Capabilities',nav_projects:'Projects',nav_contact:'Contact',header_cta:'Discuss your project',footer_desc:'Considered execution. Lasting partnerships. Enduring impact.',footer_nav:'Explore',footer_connect:'Contact',footer_city:'Riyadh, Saudi Arabia',footer_statement:'Built on trust.<br>Measured by results.',copyright:'All rights reserved',back_top:'↑ Back to top',
+  hero_eyebrow:'OSOUD NAJD GENERAL CONTRACTING · RIYADH',hero_title_a:'Strength in execution.',hero_title_b:'Confidence in delivery.',hero_description:'From infrastructure and concrete to steel structures and fit-out, our on-site experience turns ambitions into built reality.',hero_action_one:'Explore our projects',hero_action_two:'Partner with us',hero_side_one:'Quality made tangible',hero_scroll:'Explore our work ↓',cred_title:'Experience that projects can build on',cred_one:'Year established',cred_two:'Core disciplines',cred_three:'Selected project showcases',cred_note:'Based on company records',
+  home_about_kicker:'01 / ABOUT US',home_about_title:'Every detail.<br><em>A lasting impression.</em>',home_about_lead:'Founded in Riyadh in 2022, Osoud Najd is a Saudi general contracting establishment with practical experience in civil, building, infrastructure and cultural projects.',home_about_p:'We let the work speak: documented projects, authentic site photography and clearly defined services, not inflated promises.',home_about_link:'Get to know us',home_about_caption:'Details that make a difference',
+  home_projects_kicker:'02 / SELECTED WORKS',home_projects_title:'Projects speak<br><em>for themselves.</em>',home_projects_desc:'A curated selection from our execution track record. Each project has its own challenges and a story worth telling.',home_all_projects:'View all projects',source_note:'Photos are from the establishment’s portfolio. Some scopes were delivered as a subcontractor to main contractors.',
+  home_philosophy_kicker:'03 / OUR CAPABILITIES',home_philosophy_title:'Technical discipline.<br><em>Responsible execution.</em>',home_philosophy_text:'We cover a focused range of civil, structural and architectural works, collaborating with owners, developers and main contractors.',home_philosophy_link:'Explore capabilities',svc_concrete:'Concrete works',svc_steel:'Steel structures',svc_fitout:'Fit-out & renovation',svc_roads:'Roads & site works',svc_landscape:'Landscaping',
+  home_process_kicker:'04 / HOW WE WORK',home_process_title:'From reviewing scope<br><em>to quality handover.</em>',home_process_desc:'A disciplined process at each stage — upfront coordination, planning, field supervision and handover to requirements.',process_a:'Understand the scope',process_a_p:'Review drawings, requirements, specifications and boundaries.',process_b:'Plan & coordinate',process_b_p:'Align resources, priorities and site constraints.',process_c:'Execute & monitor',process_c_p:'Monitor execution, safety and quality requirements.',process_d:'Inspect & hand over',process_d_p:'Review works and complete the required handover.',cta_kicker:'YOUR NEXT PARTNERSHIP STARTS HERE',cta_title:'Turn your scope<br><em>into tangible results.</em>',cta_button:'Discuss a project',
+  about_kicker:'ABOUT OSOUD NAJD',about_page_title:'Field experience.<br><em>Partnerships built on trust.</em>',about_page_lead:'We believe good execution starts with understanding the details and continues all the way to handover.',about_story_title:'Osoud Najd.<br><em>Built through real work.</em>',about_story_p1:'Osoud Najd General Contracting Est. was established in Riyadh in 2022 to deliver structural, civil, fit-out and site works. Its documented portfolio includes work packages delivered alongside main contractors in Riyadh and Diriyah.',about_story_p2:'We focus on clear scope, disciplined execution, technical coordination and work quality. Our ambition is to earn trust through demonstrated delivery, not unmeasurable claims.',about_our_work:'See our project record',about_img_caption:'From our sites, not stock photography',about_values_kicker:'OUR PRINCIPLES',about_values_title:'The standards<br><em>we work by.</em>',val_quality:'Quality',val_quality_p:'Attention to technical details and finished work.',val_integrity:'Integrity',val_integrity_p:'Clarity in communication, commitment and scope.',val_safety:'Safety',val_safety_p:'Care for our people and the site environment.',val_delivery:'Responsible delivery',val_delivery_p:'Monitoring and review until project requirements are met.',about_cta:'A delivery partner for<br><em>your next project.</em>',
+  services_kicker:'OUR DISCIPLINES',services_page_title:'Broad capability.<br><em>Focused delivery.</em>',services_page_lead:'Transforming plans and specifications into site execution across five key disciplines.',services_intro_kicker:'OUR SERVICES',services_intro_title:'The right expertise.<br><em>For every scope.</em>',services_intro_p:'Serving building, infrastructure and development projects through scopes that support main contractors and owners.',service_title_concrete:'Concrete works',service_desc_concrete:'Delivery of structural and concrete elements in clearly scoped packages, with attention to project requirements and site coordination.',service_title_steel:'Steel structures',service_desc_steel:'Execution and installation of steel structures and metal building works according to project specifications.',service_title_fitout:'Fit-out & renovation',service_desc_fitout:'Interior fit-out, renovation and facility preparation, including functional spaces and associated finishes.',service_title_roads:'Roads & site works',service_desc_roads:'Road works, grading, hardscape and site preparation activities to project scope.',service_title_landscape:'Landscaping',service_desc_landscape:'Landscaping, exterior surfaces, pathways and external works as specified for the project.',service_contact:'Discuss this work package',service_cta:'Your next scope<br><em>begins with a conversation.</em>',
+  project_kicker:'SELECTED PROJECTS',projects_page_title:'Built on site.<br><em>Visible in the city.</em>',projects_page_lead:'Selected projects presented through authentic execution photos from the company portfolio.',projects_grid_title:'Our project record',filter_all:'All',filter_civil:'Structures',filter_infra:'Roads & landscape',filter_fitout:'Fit-out',projects_cta:'Ready to discuss<br><em>your project.</em>',
+  case_back:'Back to projects',case_location_label:'Location',case_scope_label:'Scope of work',case_basis_label:'Information source',case_basis:'Company portfolio (2024 edition)',case_overview:'PROJECT OVERVIEW',case_disclaimer:'Details describe Osoud Najd’s scope as presented in its company portfolio. They do not imply that the establishment owned or was the main contractor for the entire project. Confidential work has not been published.',case_contact:'Inquire about a similar scope',case_next_label:'NEXT PROJECT',
+  contact_kicker:'GET IN TOUCH',contact_page_title:'Your next project.<br><em>Our next partnership.</em>',contact_page_lead:'We welcome execution inquiries, contractor prequalification and partnership discussions.',contact_intro:'DIRECT CONTACT',contact_heading:'Let’s discuss<br><em>working together.</em>',contact_paragraph:'We welcome real estate developers, project owners and main contractors in Riyadh and the surrounding region.',contact_phone:'Phone',contact_mail:'Email',contact_address_label:'Office',contact_address:'Al Rimal, Riyadh — Saudi Arabia',contact_map:'View location on the map',form_heading:'Send an inquiry',form_hint:'Complete the form to open your email app with a prefilled message. Nothing is submitted to a website server.',form_name:'Your name',form_company:'Company',form_email:'Email',form_type:'Inquiry type',form_opt_1:'Project execution inquiry',form_opt_2:'Subcontracting partnership',form_opt_3:'Contractor prequalification',form_message:'Message',form_send:'Compose email',form_status:'Your email app should open with a prepared message.'
+};
 
-  function closeMenu() { mobileNav.hidden = true; menuButton.setAttribute('aria-expanded', 'false'); }
-  menuButton.addEventListener('click', () => {
-    mobileNav.hidden = !mobileNav.hidden;
-    menuButton.setAttribute('aria-expanded', String(!mobileNav.hidden));
-  });
-  document.querySelectorAll('.mobile-nav a').forEach(el => el.addEventListener('click', closeMenu));
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
-  window.addEventListener('resize', () => { if (window.innerWidth > 920) closeMenu(); });
+const projectData={
+ metro:{id:'metro',image:'project-metro.webp',secondary:'hero-metro.webp',category:['أعمال خرسانية وإنشائية','Concrete & construction'],title:['مترو الرياض — المسار الخامس','Riyadh Metro — Line 5'],place:['الرياض','Riyadh'],scope:['الأعمال الخرسانية والإنشائية','Concrete and construction works'],subtitle:['أعمال خرسانية وإنشائية ضمن المسار الخامس','Concrete and construction work on Line 5'],headline:['تنفيذ ضمن مشروع بنية تحتية بارز.','Contributing to major infrastructure.'],description:['تُظهر سابقة أعمال المؤسسة مشاركتها في حزمة أعمال خرسانية وإنشائية ضمن مشروع مترو الرياض — المسار الخامس. ويُذكر المقاول الرئيسي FAST والاستشاري Bechtel في ملف الشركة. الصور مأخوذة من مواقع التنفيذ المدرجة في الملف.','The establishment’s portfolio records concrete and construction work packages on Riyadh Metro Line 5. It identifies FAST as main contractor and Bechtel as consultant. Photography is taken from the source portfolio.']},
+ jaxroads:{id:'jaxroads',image:'project-jax-roads.webp',secondary:'detail-road.webp',category:['الطرق والمسطحات الخارجية','Roads & hardscape'],title:['منطقة جاكس — أعمال الطرق','JAX District — Roads & Hardscape'],place:['الرياض','Riyadh'],scope:['أعمال الطرق وتجهيز المواقع والمسطحات الخارجية','Roads, site preparation and hardscape'],subtitle:['مسارات وطرق ومسطحات خارجية','Roads, paving and hardscape works'],headline:['البنية التحتية تبدأ من الأرض.','Infrastructure starts on site.'],description:['يضم ملف المؤسسة صورًا موثقة لأعمال الطرق والمسطحات الخارجية في منطقة جاكس. تظهر الصور مراحل فرد الطبقات وأعمال الرصف وتجهيز المواقع ضمن نطاقات التنفيذ.','The source portfolio includes documented JAX road and hardscape site photographs, showing paving, grading and site preparation stages as part of the delivered work packages.']},
+ jaxfit:{id:'jaxfit',image:'project-jax-fitout.webp',secondary:'detail-fitout.webp',category:['تشطيبات وتجهيز','Fit-out & renovation'],title:['منطقة جاكس — التشطيبات','JAX District — Fit-out'],place:['الرياض','Riyadh'],scope:['تشطيبات وتجهيز داخلي وهياكل للمساحات','Interior fit-out and space preparation'],subtitle:['أعمال تجهيز وتشطيبات داخلية','Interior fit-out and preparation'],headline:['مساحات مجهزة للغرض.','Spaces shaped for purpose.'],description:['يعرض ملف أسود نجد صورًا لأعمال تشطيب وتجهيز المستودعات والمساحات في منطقة جاكس، بما في ذلك الأرضيات والحوائط ودورات المياه وفتحات المباني.','Osoud Najd’s portfolio documents fit-out and preparation at JAX spaces and warehouses, including floors, walls, washrooms and building openings.']},
+ diriyah:{id:'diriyah',image:'project-diriyah.webp',secondary:'hero-landscape.webp',category:['تنسيق المواقع','Landscape & hardscape'],title:['بينالي الدرعية — تنسيق المواقع','Diriyah Biennale — Landscape'],place:['الدرعية','Diriyah'],scope:['تنسيق مواقع ومسطحات خارجية','Landscaping and external works'],subtitle:['لاندسكيب وممرات ومساحات خارجية','Landscape and external site works'],headline:['تفاصيل ترتبط بالمكان.','Made for the place.'],description:['تُدرج سابقة الأعمال نطاقًا لأعمال تنسيق المواقع ضمن مشروع بينالي الدرعية، مع ذكر مقاول رئيسي CDC. وتوثق الصور أعمال الممرات والمواد الحجرية والتجهيزات الخارجية.','The portfolio lists landscape work packages at Diriyah Biennale, identifying CDC as the main contractor. Site photographs record pathways, stone materials and external finishes.']},
+ events:{id:'events',image:'project-events.webp',secondary:'detail-fitout.webp',category:['تجهيز فعاليات','Event fit-out'],title:['HYA HUB — أعمال التجهيز','HYA HUB — Event Preparation'],place:['الرياض','Riyadh'],scope:['تجهيزات ومسطحات وتهيئة مواقع','Event preparation and site fit-out'],subtitle:['تجهيز موقع ومرافق الفعالية','Event site and facility preparation'],headline:['إعداد مساحات تستقبل التجارب.','Preparing spaces for experiences.'],description:['يُظهر ملف المؤسسة صورًا لأعمال تجهيز مواقع فعاليات HYA HUB بالتعاون مع Luxury Events، وتشمل أعمال تهيئة وتجهيز المرافق والمسطحات الخارجية.','The source portfolio contains HYA HUB event preparation photographs, recording site and facility fit-out work carried out alongside Luxury Events.']},
+ steel:{id:'steel',image:'project-structure.webp',secondary:'hero-structure.webp',category:['هياكل معدنية','Steel structures'],title:['نماذج من الهياكل الحديدية','Selected Steel Structure Works'],place:['الرياض','Riyadh'],scope:['أعمال تركيب هياكل معدنية','Steel structure installation'],subtitle:['أعمال تصنيع وتركيب الهياكل المعدنية','Steel frame installation works'],headline:['الهياكل التي تدعم المساحات.','Structures that shape spaces.'],description:['تُبرز صور الملف أعمالًا ميدانية في تركيب وتنفيذ الهياكل المعدنية والإنشاءات الفولاذية، وتُعرض هنا كنماذج من تخصصات المؤسسة دون نسبتها إلى مشروع محدد غير موثق.','Photographs in the source file show on-site steel frame and structural installation, presented here as discipline examples without attributing them to an unverified project.']}
+};
+const order=['metro','jaxroads','jaxfit','diriyah','events','steel'];
+let lang='ar';try{lang=localStorage.getItem('osoud-language')==='en'?'en':'ar'}catch(e){}
+const text=(value)=>Array.isArray(value)?value[lang==='en'?1:0]:value;
+function applyLang(){const en=lang==='en';document.documentElement.lang=lang;document.documentElement.dir=en?'ltr':'rtl';document.body.setAttribute('dir',en?'ltr':'rtl');const langBtn=document.getElementById('lang-switch');if(langBtn){langBtn.textContent=en?'عربي':'EN';langBtn.setAttribute('aria-label',en?'Switch to Arabic':'Switch to English')}
+ document.querySelectorAll('[data-i18n]').forEach(el=>{const key=el.getAttribute('data-i18n');if(en&&translations[key]!==undefined)el.innerHTML=translations[key];else if(!en&&el.dataset.originalAr!==undefined)el.innerHTML=el.dataset.originalAr});
+ document.querySelectorAll('[data-project-title],[data-project-category],[data-project-location]').forEach(el=>{const key=el.getAttribute('data-project-title')||el.getAttribute('data-project-category')||el.getAttribute('data-project-location');const p=projectData[key];if(!p)return;let val=el.hasAttribute('data-project-title')?p.title:el.hasAttribute('data-project-category')?p.category:p.place;el.textContent=text(val)});
+ updateCase();}
+function updateCase(){const page=document.body.dataset.page;if(page!=='projects'||!document.getElementById('caseTitle'))return;const id=new URLSearchParams(location.search).get('id');const p=projectData[id]||projectData.metro;let set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=text(v)};let image=(id,file,alt)=>{const el=document.getElementById(id);if(el){el.src='assets/'+file;el.alt=text(alt)}};set('caseCategory',p.category);set('caseTitle',p.title);set('caseSubtitle',p.subtitle);set('caseLocation',p.place);set('caseScope',p.scope);set('caseHeadline',p.headline);set('caseDescription',p.description);image('casePhoto',p.image,p.title);image('casePhoto2',p.secondary,p.title);const next=projectData[order[(order.indexOf(p.id)+1)%order.length]];const link=document.getElementById('caseNext');if(link){link.href='project.html?id='+next.id;link.innerHTML=text(next.title)+' <span>↗</span>'}document.title=text(p.title)+' | Osoud Najd';}
 
-  const header = document.getElementById('siteHeader');
-  const navLinks = Array.from(document.querySelectorAll('.desktop-nav .nav-link'));
-  window.addEventListener('scroll', () => {
-    header.classList.toggle('scrolled',window.scrollY > 25);
-    const sections = ['home','about','services','projects','contact'];
-    let current = 'home';
-    for (const id of sections) {
-      const s = document.getElementById(id);
-      if (s && s.getBoundingClientRect().top <= 150) current = id;
-    }
-    navLinks.forEach(link => link.classList.toggle('active',link.getAttribute('href') === '#' + current));
-  }, {passive:true});
-
-  const revealNodes = document.querySelectorAll('.reveal');
-  if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const revealObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => { if(entry.isIntersecting) { entry.target.classList.add('show'); observer.unobserve(entry.target); } });
-    }, {threshold:.07,rootMargin:'0px 0px -25px 0px'});
-    revealNodes.forEach(el => revealObserver.observe(el));
-  } else revealNodes.forEach(el => el.classList.add('show'));
-
-  const filters = document.querySelectorAll('.filter');
-  const cards = document.querySelectorAll('.project-card');
-  filters.forEach(filter => filter.addEventListener('click', () => {
-    const kind = filter.dataset.filter;
-    filters.forEach(f => { f.classList.toggle('active', f === filter); f.setAttribute('aria-pressed',String(f === filter)); });
-    cards.forEach(card => { card.classList.toggle('hidden-project',!(kind === 'all' || card.dataset.category === kind)); });
-  }));
-
-  const modal = document.getElementById('projectModal');
-  const modalTitle = document.getElementById('modalTitle');
-  const modalCategory = document.getElementById('modalCategory');
-  const modalDescription = document.getElementById('modalDescription');
-  const modalImage = document.getElementById('modalImage');
-  function populateModal(id) {
-    const card = document.querySelector(`.project-card[data-project="${id}"]`);
-    if (!card || !projects[id]) return;
-    const detail = projects[id][language];
-    modalTitle.textContent = detail.title;
-    modalCategory.textContent = detail.category;
-    modalDescription.textContent = detail.text;
-    modalImage.src = card.querySelector('img').getAttribute('src');
-    modalImage.alt = detail.title;
-    modal.dataset.currentProject = id;
-  }
-  document.querySelectorAll('.project-open').forEach(button => button.addEventListener('click', () => {
-    const id = button.closest('.project-card').dataset.project;
-    populateModal(id);
-    if (typeof modal.showModal === 'function') modal.showModal();
-  }));
-  document.getElementById('modalClose').addEventListener('click', () => modal.close());
-  document.getElementById('modalContact').addEventListener('click', () => modal.close());
-  modal.addEventListener('click', ev => { if (ev.target === modal) modal.close(); });
-  document.getElementById('year').textContent = new Date().getFullYear();
+function init(){document.querySelectorAll('[data-i18n]').forEach(el=>el.dataset.originalAr=el.innerHTML);const langBtn=document.getElementById('lang-switch');langBtn?.addEventListener('click',()=>{lang=lang==='en'?'ar':'en';try{localStorage.setItem('osoud-language',lang)}catch(e){}applyLang()});
+ const menu=document.getElementById('menu-toggle');const header=document.getElementById('site-header');menu?.addEventListener('click',()=>{const open=header.classList.toggle('menu-open');menu.setAttribute('aria-expanded',String(open))});document.querySelectorAll('.primary-nav a').forEach(a=>a.addEventListener('click',()=>{header.classList.remove('menu-open');menu?.setAttribute('aria-expanded','false')}));window.addEventListener('scroll',()=>{header.classList.toggle('is-scrolled',window.scrollY>10)},{passive:true});
+ document.querySelectorAll('.project-filters button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.project-filters button').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));const type=btn.dataset.filter;document.querySelectorAll('.projects-page-grid .project-tile').forEach(tile=>tile.hidden=type!=='all'&&tile.dataset.category!==type)}));
+ const form=document.getElementById('contactForm');form?.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity())return;const data=new FormData(form);const body=`Name: ${data.get('name')}\nCompany: ${data.get('company')||'-'}\nEmail: ${data.get('email')}\nInquiry: ${data.get('kind')}\n\n${data.get('message')}`;const subject='Business Inquiry — '+data.get('kind')+' — Osoud Najd';const href='mailto:info@osoudnajd.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);document.getElementById('formStatus').textContent=lang==='en'?'Your email app should open with your prepared message.':'سيُفتح تطبيق البريد برسالتك الجاهزة لإرسالها.';window.location.href=href});
+ const yr=document.getElementById('year');if(yr)yr.textContent=String(new Date().getFullYear());applyLang();}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
